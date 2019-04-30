@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken'),
-      secret = process.env.SECRET
+      secret = process.env.SECRET,
+      User = require('mongoose').model('User')
 
 /**
  * @desc Validates authenticity of JWT
@@ -9,7 +10,7 @@ module.exports = (req, res) => {
   let token = req.headers['x-access-token'] // Extract token
   if (token) {
     jwt.verify(token, secret, async (err, decoded) => {
-      if (err) return res.sendStatus(401) // Send 401 if invalid
+      if (err || await !User.findById(decoded.id)) return res.sendStatus(401) // Send 401 if invalid, or user not found
       else return res.send(decoded.id).end() // Else send User ID from decoded JWT
     })
   } else {

@@ -51,12 +51,6 @@ const UserSchema = new mongoose.Schema({
     default: 0
   },
 
-  // Posts
-  posts: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post'
-  }],
-
   // Password
   hash: String,
   salt: String

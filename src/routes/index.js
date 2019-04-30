@@ -1,6 +1,7 @@
 const router = require('express').Router(),
       mongoose = require('mongoose'),
-      User = mongoose.model('User')
+      User = mongoose.model('User'),
+      auth = require('auth-middleware')
 
 // Preload User on routes with :user_id param
 router.param('user_id', async (req, res, next, userId) => {
@@ -15,5 +16,7 @@ router.post('/register', require('./register')) // register
 router.post('/login', require('./login')) // login
 
 router.get('/:user_id', (req, res) => res.json(req.targetUser.publicData())) // fetch user's public data
+
+router.put('/:user_id/follow', auth({ required: true }), require('./follow'))
 
 module.exports = router
