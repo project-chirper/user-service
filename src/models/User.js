@@ -115,10 +115,11 @@ UserSchema.methods.toAuthJSON = function() {
  */
 UserSchema.methods.publicData = function() {
   return {
+    id: this._id,
     username: this.username,
     profile: this.profile,
     followerCount: this.followerCount,
-    following: this.following.length,
+    following: this.following ? this.following.length : undefined,
     dateCreated: this.dateCreated
   }
 }

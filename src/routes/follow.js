@@ -1,5 +1,9 @@
 const User = require('mongoose').model('User')
 
+/**
+ * @desc Toggles follow status of targetUser
+ * @return 200
+ */
 module.exports = async (req, res, next) => {
   // Prevent user from following themself
   if (req.user == req.targetUser._id) return res.sendStatus(401)
