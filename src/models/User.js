@@ -99,29 +99,35 @@ UserSchema.methods.generateJWT = function() {
  */
 UserSchema.methods.toAuthJSON = function() {
   return {
+    id: this._id,
     username: this.username,
     email: this.email.address,
     profile: this.profile,
     token: this.generateJWT(),
-    followerCount: this.followerCount,
-    following: this.following.length,
     dateCreated: this.dateCreated
   }
 }
 
 /**
  * @desc Returns only public data
+ * @param viewer Viewers ID
  * @return JSON public user data
  */
-UserSchema.methods.publicData = function() {
+UserSchema.methods.publicData = async function({ viewer }) {
+  // Fetch viewer
+  viewer = viewer ? await User.findById(viewer, 'following') : false
+
   return {
     id: this._id,
     username: this.username,
     profile: this.profile,
     followerCount: this.followerCount,
-    following: this.following ? this.following.length : undefined,
+    followingCount: this.following ? this.following.length : undefined,
+    isFollowed: viewer ? viewer.following.indexOf(this._id) >= 0 : false,
+    followsYou: viewer && this.following ? this.following.indexOf(viewer._id) >= 0 : false, 
     dateCreated: this.dateCreated
   }
 }
 
 mongoose.model('User', UserSchema)
+const User = mongoose.model('User')
