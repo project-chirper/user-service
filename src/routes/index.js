@@ -10,8 +10,6 @@ router.post('/login', require('./login')) // login
 
 // load user data
 router.get('/', auth({ required: true }), async (req, res) => {
-  console.log(req.user)
-
   let user = await User.findById(req.user)
   if(!user) return res.sendStatus(404)
   return res.json(user.toAuthJSON())
