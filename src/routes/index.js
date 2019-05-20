@@ -12,7 +12,7 @@ router.post('/login', require('./login')) // login
 router.get('/', auth({ required: true }), async (req, res) => {
   let user = await User.findById(req.user)
   if(!user) return res.sendStatus(404)
-  return res.json(user.toAuthJSON())
+  return res.json(await user.toAuthJSON())
 })
 
 router.get('/:user_id', auth({ required: false }), loadUser(), async (req, res) => res.json(await req.targetUser.publicData({ viewer: req.user }))) // fetch user's public data

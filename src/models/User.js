@@ -28,7 +28,6 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-
   profile: {
     bio: {
       type: String,
@@ -97,15 +96,13 @@ UserSchema.methods.generateJWT = function() {
  * @desc Transforms basic user data into JSON
  * @return JSON user data including JWT
  */
-UserSchema.methods.toAuthJSON = function() {
-  return {
-    id: this._id,
-    username: this.username,
+UserSchema.methods.toAuthJSON = async function() {
+  let publicData = await this.publicData({ viewer: false })
+  let privateData = {
     email: this.email.address,
-    profile: this.profile,
     token: this.generateJWT(),
-    dateCreated: this.dateCreated
   }
+  return { ...publicData, ...privateData }
 }
 
 /**

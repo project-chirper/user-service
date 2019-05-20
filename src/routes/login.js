@@ -15,6 +15,6 @@ module.exports = async (req, res, next) => {
   if (!user) return res.status(422).json(noAuthResponse) // User doesn't exist
   // Validate users password
   return user.validPassword(req.body.password) ?
-         res.json(user.toAuthJSON()) : // Send basic auth json data if valid
+         res.json(await user.toAuthJSON()) : // Send basic auth json data if valid
          res.status(422).json(noAuthResponse) // Else return no auth
 }

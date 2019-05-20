@@ -28,5 +28,5 @@ module.exports = async (req, res) => {
     });
   }
   
-  return res.json(user.toAuthJSON()) // Return basic user data JSON including JWT
+  return res.json(await user.toAuthJSON()) // Return basic user data JSON including JWT
 }
