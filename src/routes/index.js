@@ -15,10 +15,18 @@ router.get('/', auth({ required: true }), async (req, res) => {
   return res.json(await user.toAuthJSON())
 })
 
+// Verify email
+router.get('/verify-email/:uniqueCode', require('./verify-email'))
+
+// Search users
+router.get('/search-user', require('./search-user'))
+
 router.get('/:user_id', auth({ required: false }), loadUser(), async (req, res) => res.json(await req.targetUser.publicData({ viewer: req.user }))) // fetch user's public data
 router.put('/:user_id/follow', auth({ required: true }), loadUser('followerCount'), require('./follow')) // follow a user
 
 router.get('/:user_id/following', loadUser('following'), (req, res) => res.json(req.targetUser.following)) // gets list of users user is following
 router.get('/:user_id/following/:other_user', loadUser('following'), (req, res) => res.json(req.targetUser.following.indexOf(req.params.other_user) >= 0)) // whether target user is following other user
+
+
 
 module.exports = router

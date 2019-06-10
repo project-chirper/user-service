@@ -50,6 +50,12 @@ const UserSchema = new mongoose.Schema({
     default: 0
   },
 
+  // A unique code used to verify emails, password recoveries, etc
+  uniqueCode: {
+    type: String,
+    default: () => Math.random().toString(36).substr(2, 8)
+  },
+
   // Password
   hash: String,
   salt: String
@@ -99,7 +105,7 @@ UserSchema.methods.generateJWT = function() {
 UserSchema.methods.toAuthJSON = async function() {
   let publicData = await this.publicData({ viewer: false })
   let privateData = {
-    email: this.email.address,
+    email: this.email, // this includes { address & verified }
     token: this.generateJWT(),
   }
   return { ...publicData, ...privateData }
@@ -125,6 +131,12 @@ UserSchema.methods.publicData = async function({ viewer }) {
     dateCreated: this.dateCreated
   }
 }
+
+// Generates and sets a new unique code
+UserSchema.methods.newUniqueCode = function() {
+  this.uniqueCode = Math.random().toString(36).substr(2, 8)
+}
+
 
 mongoose.model('User', UserSchema)
 const User = mongoose.model('User')
