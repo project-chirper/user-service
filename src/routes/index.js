@@ -21,6 +21,9 @@ router.get('/verify-email/:uniqueCode', require('./verify-email'))
 // Search users
 router.get('/search-user', require('./search-user'))
 
+// Edit display info
+router.put('/display-info', auth({ required: true }), require('./display-info'))
+
 router.get('/:user_id', auth({ required: false }), loadUser(), async (req, res) => res.json(await req.targetUser.publicData({ viewer: req.user }))) // fetch user's public data
 router.put('/:user_id/follow', auth({ required: true }), loadUser('followerCount'), require('./follow')) // follow a user
 
