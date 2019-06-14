@@ -7,14 +7,10 @@ const User = require('mongoose').model('User')
 module.exports = async (req, res) => {
   if (!req.params.uniqueCode) return res.sendStatus(401)
 
-  console.log(req.params.uniqueCode)
-
   // Find user with uniqueCode
-  let user = await User.findOne({ uniqueCode: req.params.uniqueCode })
+  let user = await User.findOne({ uniqueCode: req.params.uniqueCode }, 'email')
   if (!user) return res.sendStatus(401) // If user isn't found, return 401
-
-  console.log(user)
-
+  
   // Set user to verify
   user.email.verified = true
   await user.save()

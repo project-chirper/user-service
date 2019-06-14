@@ -1,5 +1,5 @@
 const User = require('mongoose').model('User')
-const axios = require('axios')
+const verifyEmail = require('../../common/verifyEmail.axios')
 
 /**
  * @desc Registers a user
@@ -21,15 +21,7 @@ module.exports = async (req, res) => {
   user.setPassword(req.body.password)
 
   // Send verify email
-  await axios({
-    url: `http://mailer-service:3004/mailer/verify-email`,
-    method: 'post',
-    data: {
-      username: user.username,
-      email: user.email,
-      uniqueCode: user.uniqueCode
-    }
-  })
+  await verifyEmail({ username: user.username, email: user.email, uniqueCode: user.uniqueCode })
 
   try {
     await user.save()
